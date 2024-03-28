@@ -1,11 +1,16 @@
 menu = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Welcome to the main menu!
+Welcome to Big Money Bank's main banking menu!
 
-1. Place holder 1
-2. Place holder 2
-3. Place holder 3
+1. Check Balance
+2. Make a Deposit
+3. Widthdrawl Cash
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
-
-menu_choice = input(menu)
+new_user = input("Are you a new Big Money Bank user:")
+if new_user == 'no':
+    account_num = input("Enter your account number:")
+    account_pin = input("Enter your account PIN:")
+    menu_choice = input(menu)
+else:
+    new_name = input("What is your name:")
