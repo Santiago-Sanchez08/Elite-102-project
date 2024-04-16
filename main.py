@@ -115,7 +115,7 @@ while menu_choice != '6':
 
     elif menu_choice == '4':
         accountmenuchoice = input(accountmenu)
-        while accountmenuchoice != '5':#
+        while accountmenuchoice != '5':
             if accountmenuchoice == '1':
                 cursor = connection.cursor()
                 new_pin = input("Enter Your New PIN: ")
@@ -163,13 +163,15 @@ while menu_choice != '6':
 
     elif menu_choice == '5':
         cursor = connection.cursor()
-        confirmation = input("Are You sure that you would like to delete you account: ")
+        confirmation = input("Are You sure that you would like to delete you account(yes/no): ")
         if confirmation == 'yes':
             deleteaccount = ("DELETE FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
             cursor.execute(deleteaccount, (account_pin, first_name, last_name))
             connection.commit()
             print("Account deleted")
+            menu_choice = input(menu)
         else:
+            print('Thank you for staying with us!')
             menu_choice = input(menu)
 print("Thank you for banking with Big Bank Banking!")
 
