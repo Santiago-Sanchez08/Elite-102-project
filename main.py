@@ -45,9 +45,8 @@ Welcome to the Big Money Bank Account Menu!
 5. Exit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
-new_user = input('Are you a new Big Bank user(yes/no): ')
-#def new_userdata(new_user):
-while new_user == 'yes':
+
+def createuser():
     new_fname = input("Enter your first name:")
     new_lname = input('Enter your last name:')
     new_pin = input("Enter a PIN:")
@@ -62,60 +61,47 @@ while new_user == 'yes':
     cursor.close()
     print("Your all set to use Big Money Bank!")
     print("Returning to home menu...")
-    new_user = input('Are you a new Big Bank user: ')
-        
+    
 
-#def accountdata():
-account_pin = input("Enter your account PIN: ")
-first_name = input('Enter your first name: ')
-last_name = input('Enter your last name: ')
+def viewfunds():
+    cursor = connection.cursor()
+    checkbalance = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
+    cursor.execute(checkbalance, (account_pin, first_name, last_name))
+    for totalfunds in cursor:
+        print("Your total balance is: " + str(totalfunds[0]))
+    cursor.close()
 
+def deposit():
+    cursor = connection.cursor()
+    deposit = int(input("How much would you like to deposit: "))
+    gettotalfunds = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
+    cursor.execute(gettotalfunds, (account_pin, first_name, last_name))
+    for fund in cursor:
+        intfund= int(str(fund[0]))
+    totalfunds = deposit + intfund
+    updatefunds = ("UPDATE bank SET totalfunds = %s WHERE pin = %s AND firstname = %s AND lastname = %s")
+    cursor.execute(updatefunds, (totalfunds, account_pin, first_name, last_name))
+    connection.commit()
+    print("Your total balance is: " + str(totalfunds))
+    cursor.close()
 
-menu_choice = input(menu)
-while menu_choice != '6':
-#def choices(account_pin, first_name, last_name):
-    if menu_choice == '1':
-        cursor = connection.cursor()
-        checkbalance = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
-        cursor.execute(checkbalance, (account_pin, first_name, last_name))
-        for totalfunds in cursor:
-            print("Your total balance is: " + str(totalfunds[0]))
-        cursor.close()
-        menu_choice=input(menu)
+def withdraw():
+    cursor = connection.cursor()
+    withdraw = int(input("How much would you like to withdraw: "))
+    gettotalfunds = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
+    cursor.execute(gettotalfunds, (account_pin, first_name, last_name))
+    for fund in cursor:
+        intfund= int(str(fund[0]))
+    totalfunds = intfund - withdraw
+    updatefunds = ("UPDATE bank SET totalfunds = %s WHERE pin = %s AND firstname = %s AND lastname = %s")
+    cursor.execute(updatefunds, (totalfunds, account_pin, first_name, last_name))
+    connection.commit()
+    print("Your total balance is: " + str(totalfunds))
+    cursor.close()
 
-    elif menu_choice == '2':
-        cursor = connection.cursor()
-        deposit = int(input("How much would you like to deposit: "))
-        gettotalfunds = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
-        cursor.execute(gettotalfunds, (account_pin, first_name, last_name))
-        for fund in cursor:
-            intfund= int(str(fund[0]))
-        totalfunds = deposit + intfund
-        updatefunds = ("UPDATE bank SET totalfunds = %s WHERE pin = %s AND firstname = %s AND lastname = %s")
-        cursor.execute(updatefunds, (totalfunds, account_pin, first_name, last_name))
-        connection.commit()
-        print("Your total balance is: " + str(totalfunds))
-        cursor.close()
-        menu_choice=input(menu)
-
-    elif menu_choice == '3':
-        cursor = connection.cursor()
-        withdraw = int(input("How much would you like to withdraw: "))
-        gettotalfunds = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
-        cursor.execute(gettotalfunds, (account_pin, first_name, last_name))
-        for fund in cursor:
-            intfund= int(str(fund[0]))
-        totalfunds = intfund - withdraw
-        updatefunds = ("UPDATE bank SET totalfunds = %s WHERE pin = %s AND firstname = %s AND lastname = %s")
-        cursor.execute(updatefunds, (totalfunds, account_pin, first_name, last_name))
-        connection.commit()
-        print("Your total balance is: " + str(totalfunds))
-        cursor.close()
-        menu_choice=input(menu)
-
-    elif menu_choice == '4':
-        accountmenuchoice = input(accountmenu)
-        while accountmenuchoice != '5':
+def accountsettings():
+    accountmenuchoice = input(accountmenu)
+    while accountmenuchoice != '5':
             if accountmenuchoice == '1':
                 cursor = connection.cursor()
                 new_pin = input("Enter Your New PIN: ")
@@ -159,6 +145,38 @@ while menu_choice != '6':
                 accountmenuchoice = input(accountmenu)
             else:
                 print('Invalid option')
+
+        
+
+new_user = input('Are you a new Big Bank user(yes/no): ')
+#def new_userdata(new_user):
+while new_user == 'yes':
+    createuser()
+    new_user = input('Are you a new Big Bank user: ')   
+
+#def accountdata():
+account_pin = input("Enter your account PIN: ")
+first_name = input('Enter your first name: ')
+last_name = input('Enter your last name: ')
+
+
+menu_choice = input(menu)
+while menu_choice != '6':
+#def choices(account_pin, first_name, last_name):
+    if menu_choice == '1':
+        viewfunds()
+        menu_choice=input(menu)
+
+    elif menu_choice == '2':
+        deposit()
+        menu_choice=input(menu)
+
+    elif menu_choice == '3':
+        withdraw()
+        menu_choice = input(menu)
+        
+    elif menu_choice == '4':
+        accountsettings()
         menu_choice = input(menu)
 
     elif menu_choice == '5':
@@ -169,10 +187,11 @@ while menu_choice != '6':
             cursor.execute(deleteaccount, (account_pin, first_name, last_name))
             connection.commit()
             print("Account deleted")
-            menu_choice = input(menu)
+            print('Logging out...')
+            exit()
         else:
             print('Thank you for staying with us!')
-            menu_choice = input(menu)
+            menu_choice=input(menu)
 print("Thank you for banking with Big Bank Banking!")
 
 #new_user = input("Are you a new Big Money Bank user:")
