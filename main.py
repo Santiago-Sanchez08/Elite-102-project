@@ -9,7 +9,7 @@ connection = mysql.connector.connect(user='sql',database='elite102project',passw
 
 cursor = connection.cursor()
 
-'''
+"""
 root = Tk()
 root.title = ('Big Bank Banking App')
 frame = ttk.Frame(root)
@@ -20,8 +20,9 @@ button = ttk.Button(frame, text='enter', command='buttonpressed')
 button.grid()
 test=button['text']
 print(test)
-'''
+"""
 
+# Main menu
 menu = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Welcome to Big Money Bank's Main Banking Menu!
@@ -34,6 +35,7 @@ Welcome to Big Money Bank's Main Banking Menu!
 6. Log Out
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
+# Account settings menu
 accountmenu = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Welcome to the Big Money Bank Account Menu!
@@ -45,7 +47,7 @@ Welcome to the Big Money Bank Account Menu!
 5. Exit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
-
+# creates new users and puts them in the database
 def createuser():
     new_fname = input("Enter your first name:")
     new_lname = input('Enter your last name:')
@@ -62,7 +64,7 @@ def createuser():
     print("Your all set to use Big Money Bank!")
     print("Returning to home menu...")
     
-
+# allows to views funds
 def viewfunds():
     cursor = connection.cursor()
     checkbalance = ("SELECT totalfunds FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
@@ -71,6 +73,7 @@ def viewfunds():
         print("Your total balance is: " + str(totalfunds[0]))
     cursor.close()
 
+# allows deposits and adds the number to the data base
 def deposit():
     cursor = connection.cursor()
     deposit = int(input("How much would you like to deposit: "))
@@ -85,6 +88,7 @@ def deposit():
     print("Your total balance is: " + str(totalfunds))
     cursor.close()
 
+# allows withdraws and subtracts the number to the data base
 def withdraw():
     cursor = connection.cursor()
     withdraw = int(input("How much would you like to withdraw: "))
@@ -99,9 +103,11 @@ def withdraw():
     print("Your total balance is: " + str(totalfunds))
     cursor.close()
 
+# allows user to change account settings
 def accountsettings():
     accountmenuchoice = input(accountmenu)
     while accountmenuchoice != '5':
+            # change pin
             if accountmenuchoice == '1':
                 cursor = connection.cursor()
                 new_pin = input("Enter Your New PIN: ")
@@ -112,7 +118,7 @@ def accountsettings():
                 cursor.close()
                 print('Please log back in using your new pin!')
                 exit()
-
+            # Change first name
             elif accountmenuchoice == '2':
                 cursor = connection.cursor()
                 new_fname = input("Enter Your New First Name: ")
@@ -123,7 +129,7 @@ def accountsettings():
                 cursor.close()
                 print('Please log back in using your new first name!')
                 exit()
-
+            # Change last name
             elif accountmenuchoice == '3':
                 cursor = connection.cursor()
                 new_lname = input("Enter Your New Last Name: ")
@@ -134,7 +140,7 @@ def accountsettings():
                 cursor.close()
                 print('Please log back in using your last name!')
                 exit()
-
+            #View account number
             elif accountmenuchoice == '4':
                 cursor = connection.cursor()
                 getaccnum = ("SELECT accountnum FROM bank WHERE pin = %s AND firstname = %s AND lastname = %s")
@@ -155,6 +161,8 @@ while new_user == 'yes':
     new_user = input('Are you a new Big Bank user: ')   
 
 #def accountdata():
+
+# Collects user data
 account_pin = input("Enter your account PIN: ")
 first_name = input('Enter your first name: ')
 last_name = input('Enter your last name: ')
@@ -180,6 +188,7 @@ while menu_choice != '6':
         menu_choice = input(menu)
 
     elif menu_choice == '5':
+        #allows for account deletion
         cursor = connection.cursor()
         confirmation = input("Are You sure that you would like to delete you account(yes/no): ")
         if confirmation == 'yes':
